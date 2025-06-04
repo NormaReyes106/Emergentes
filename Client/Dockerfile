@@ -22,9 +22,15 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 # Copia tu configuración personalizada de Nginx
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
+# Copia tu configuración personalizada de Nginx
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+
+# Copia el script que espera al backend
+COPY ./wait-for-server.sh /wait-for-server.sh
+RUN chmod +x /wait-for-server.sh
+
 # Expone el puerto 80 para servir la app
 EXPOSE 80
 
-# Ejecuta Nginx en primer plano
-CMD ["nginx", "-g", "daemon off;"]
-
+# Usa el script como punto de entrada
+CMD ["/wait-for-server.sh"]
